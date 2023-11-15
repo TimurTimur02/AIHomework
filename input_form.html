@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Модель прогнозирования качества молока</title>
+</head>
+<body>
+    <h1>Введите данные для прогноза качества молока</h1>
+    <form action="/predict" method="post" onsubmit="sendJSON(event)">
+        <label for="pH">pH:</label>
+        <input type="text" id="pH" name="pH" placeholder="от 0.0 до 10.0"><br><br>
+
+        <label for="Temprature">Температура:</label>
+        <input type="text" id="Temprature" name="Temprature" placeholder="от 0 до 100"><br><br>
+
+        <label for="Taste">Taste:</label>
+        <input type="text" id="Taste" name="Taste" placeholder="либо 0 либо 1"><br><br>
+
+        <label for="Odor">Odor:</label>
+        <input type="text" id="Odor" name="Odor" placeholder="либо 0 либо 1"><br><br>
+
+        <label for="Fat">Fat:</label>
+        <input type="text" id="Fat" name="Fat" placeholder="либо 0 либо 1"><br><br>
+
+        <label for="Turbidity">Turbidity:</label>
+        <input type="text" id="Turbidity" name="Turbidity" placeholder="либо 0 либо 1"><br><br>
+
+        <label for="Colour">Colour:</label>
+        <input type="text" id="Colour" name="Colour" placeholder="от 240 до 255"><br><br>
+
+        <input type="submit" value="Получить прогноз">
+    </form>
+
+    <script>
+    function sendJSON(event) {
+        event.preventDefault();
+
+        var formData = new FormData(event.target);
+
+        var dataToSend = {
+            pH: formData.get("pH"),
+            Temprature: formData.get("Temprature"),
+            Taste: formData.get("Taste"),
+            Odor: formData.get("Odor"),
+            Fat: formData.get("Fat"),
+            Turbidity: formData.get("Turbidity"),
+            Colour: formData.get("Colour")
+        };
+
+        fetch("/predict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dataToSend)
+        })
+        .then(response => response.json())
+        .then(data => {
+            var predictionElement = document.getElementById("prediction");
+            predictionElement.innerHTML = "Предсказание: " + data.prediction[0];
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
+</script>
+<p id="prediction"></p>
+</body>
+</html>
