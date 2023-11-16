@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Опрос</title>
+</head>
+<body>
+    <form action="/submit" method="post">
+        {% for question in survey_questions %}
+            <label for="{{ question['question'] }}">{{ question['question'] }}</label><br>
+            {% if question['type'] == 'multiple-choice' %}
+                {% for option in question['options'] %}
+                    <input type="radio" id="{{ option }}" name="{{ question['question'] }}" value="{{ option }}">
+                    <label for="{{ option }}">{{ option }}</label><br>
+                {% endfor %}
+            {% elif question['type'] == 'checkbox' %}
+                {% for option in question['options'] %}
+                    <input type="checkbox" id="{{ option }}" name="{{ question['question'] }}[]" value="{{ option }}">
+                    <label for="{{ option }}">{{ option }}</label><br>
+                {% endfor %}
+            {% elif question['type'] == 'open-text' %}
+                <input type="text" id="{{ question['question'] }}" name="{{ question['question'] }}"><br>
+            {% endif %}
+            <br>
+        {% endfor %}
+        <input type="submit" value="Отправить">
+    </form>
+</body>
+</html>
